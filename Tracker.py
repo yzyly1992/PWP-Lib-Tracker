@@ -12,7 +12,7 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s - %(message)s',
                         datefmt='%Y-%m-%d %H:%M:%S')
-    paths = ["/mnt/jarvis/Library/PWP-LIBRARY/CUTOUTS/PLANTS/ALL PLANTS Collection/", "/mnt/jarvis/Library/PWP-LIBRARY/CUTOUTS/PEOPLE/PHOTO PEOPLE/"]
+    paths = ["/mnt/jarvis/Library/PWP-LIBRARY/CUTOUTS/PLANTS/ALL\ PLANTS\ Collection/", "/mnt/jarvis/Library/PWP-LIBRARY/CUTOUTS/PEOPLE/PHOTO\ PEOPLE/"]
     observers = []
     event_handler = PatternMatchingEventHandler(patterns=["*.png"], ignore_patterns = "", ignore_directories=True, case_sensitive=True)
     publicPath = "/home/dyang/PWP-Lib-Search/build"
