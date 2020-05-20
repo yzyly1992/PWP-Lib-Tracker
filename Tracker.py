@@ -12,8 +12,9 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s - %(message)s',
                         datefmt='%Y-%m-%d %H:%M:%S')
-    path = "/mnt/jarvis/Library/PWP-LIBRARY/CUTOUTS/"
-    event_handler = PatternMatchingEventHandler(patterns=["*.png", "*.jpg", "*.skp"], ignore_patterns = "", ignore_directories=True, case_sensitive=True)
+    paths = ["/mnt/jarvis/Library/PWP-LIBRARY/CUTOUTS/PLANTS/ALL PLANTS Collection/", "/mnt/jarvis/Library/PWP-LIBRARY/CUTOUTS/PEOPLE/PHOTO PEOPLE/"]
+    observers = []
+    event_handler = PatternMatchingEventHandler(patterns=["*.png"], ignore_patterns = "", ignore_directories=True, case_sensitive=True)
     publicPath = "/home/dyang/PWP-Lib-Search/build"
     buildPath = "/home/dyang/PWP-Lib-Search/public"
 
@@ -36,7 +37,7 @@ if __name__ == "__main__":
                     im = Image.open(filePath)
                 except IOError:
                     print("failed to identify", path)
-                name = filePath.splite("/")[-1][-4:]
+                name = filePath.splite("/")[-1][:-4]
                 if re.match(r'.*?tree.*?', name, flags=re.IGNORECASE):
                     category = "Tree"
                     name = name.replace('Tree', '')
@@ -146,12 +147,18 @@ if __name__ == "__main__":
     event_handler.on_deleted = on_deleted
 
     observer = Observer()
-    observer.schedule(event_handler, path, recursive=True)
+    for path in paths:
+        observer.schedule(event_handler, path, recursive=False)
+        observers.append(observer)
     observer.start()
 
     try:
         while True:
-            time.sleep(1)
+            time.sleep(60)
     except KeyboardInterrupt:
-        observer.stop()
-    observer.join()
+        for observer in observers:
+            observer.unschedule_all()
+            observer.stop()
+
+    for observer in observers:
+        observer.join()
