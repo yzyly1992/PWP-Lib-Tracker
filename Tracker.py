@@ -12,7 +12,7 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s - %(message)s',
                         datefmt='%Y-%m-%d %H:%M:%S')
-    paths = ["/mnt/jarvis/Library/PWP-LIBRARY/CUTOUTS/PLANTS/ALL\ PLANTS\ Collection/", "/mnt/jarvis/Library/PWP-LIBRARY/CUTOUTS/PEOPLE/PHOTO\ PEOPLE/"]
+    paths = ["/mnt/jarvis/Library/PWP-LIBRARY/CUTOUTS/PLANTS/ALL PLANTS Collection", "/mnt/jarvis/Library/PWP-LIBRARY/CUTOUTS/PEOPLE/PHOTO PEOPLE"]
     observers = []
     event_handler = PatternMatchingEventHandler(patterns=["*.png"], ignore_patterns = "", ignore_directories=True, case_sensitive=True)
     publicPath = "/home/dyang/PWP-Lib-Search/build"
@@ -30,7 +30,8 @@ if __name__ == "__main__":
     def on_created(event):
         filePath = event.src_path
         folderName = filePath.splite("/")[5]
-        
+        print(folderName)
+
         if folderName == "PLANTS":
             if filePath[-3:] == "png":
                 try:
@@ -127,7 +128,8 @@ if __name__ == "__main__":
     def on_deleted(event):
         filePath = event.src_path
         folderName = filePath.splite("/")[5]
-        
+        print(filePath)
+
         if folderName == "PLANTS":
             if filePath[-3:] == "png":
                 with open('/home/dyang/PWP-Lib-Search/public/plants.json', 'r') as plantJson:
@@ -148,13 +150,13 @@ if __name__ == "__main__":
 
     observer = Observer()
     for path in paths:
-        observer.schedule(event_handler, path, recursive=False)
+        observer.schedule(event_handler, path)
         observers.append(observer)
     observer.start()
 
     try:
         while True:
-            time.sleep(60)
+            time.sleep(1)
     except KeyboardInterrupt:
         for observer in observers:
             observer.unschedule_all()
