@@ -13,8 +13,7 @@ if __name__ == "__main__":
                         format='%(asctime)s - %(message)s',
                         datefmt='%Y-%m-%d %H:%M:%S')
     paths = ["/mnt/jarvis/Library/PWP-LIBRARY/CUTOUTS/PLANTS/ALL PLANTS Collection", "/mnt/jarvis/Library/PWP-LIBRARY/CUTOUTS/PEOPLE/PHOTO PEOPLE"]
-    observers = []
-    event_handler = PatternMatchingEventHandler(patterns=["*.png"], ignore_patterns = "", ignore_directories=True, case_sensitive=True)
+    event_handler = PatternMatchingEventHandler(patterns=["*.png"], ignore_patterns = None, ignore_directories=True, case_sensitive=False)
     publicPath = "/home/dyang/PWP-Lib-Search/build"
     buildPath = "/home/dyang/PWP-Lib-Search/public"
 
@@ -159,21 +158,19 @@ if __name__ == "__main__":
 
     event_handler.on_created = on_created
     event_handler.on_deleted = on_deleted
+    threads = []
 
-    observer = Observer()
+    nWatch = Observer()
     for path in paths:
-        observer.schedule(event_handler, path, recursive=False)
-        observers.append(observer)
-    observer.start()
-    print(observers)
+        targetPath = str(path)
+        nWatch.schedule(event_handler, targetPath, recursive=False)
+        threads.append(nWatch)
+
+    nWatch.start()
 
     try:
         while True:
             time.sleep(5)
     except KeyboardInterrupt:
-        for o in observers:
-            o.unschedule_all()
-            o.stop()
-
-    for o in observers:
-        o.join()
+        nWatch.stop()
+    nWatch.join()
