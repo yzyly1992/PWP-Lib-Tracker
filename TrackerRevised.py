@@ -144,10 +144,54 @@ if __name__ == "__main__":
                         json.dump(plantData, buildJson)
         print("delete file success")
 
+    def on_moved(event):
+        oldName = event.src_path
+        newName = event.dest_path
 
+        with open('/home/dyang/PWP-Lib-Search/build/plants.json', 'r') as plantJson:
+            plantData = json.load(plantJson)
+            for item in plantData:
+                if item["path"] == oldName.replace("/mnt/jarvis/Library", "Y:").replace("/", "\\"):
+                    name = newName.split("/")[-1][:-4]
+                    if re.match(r'.*?tree.*?', name, flags=re.IGNORECASE):
+                        category = "Tree"
+                        name = name.replace('Tree', '')
+                    elif re.match(r'.*?shrub.*?', name, flags=re.IGNORECASE):
+                        category = "Shrub"
+                        name = name.replace('Shrub', '')
+                    elif re.match(r'.*?flower.*?', name, flags=re.IGNORECASE):
+                        category = "Flower"
+                        name = name.replace('Flower', '')
+                    elif re.match(r'.*?grass.*?', name, flags=re.IGNORECASE):
+                        category = "Grass"
+                        name = name.replace('Grass', '')
+                    elif re.match(r'.*?groundcover.*?', name, flags=re.IGNORECASE):
+                        category = "Groundcover"
+                        name = name.replace('Groundcover', '')
+                    elif re.match(r'.*?aquatic.*?', name, flags=re.IGNORECASE):
+                        category = "Aquatic"
+                        name = name.replace('Aquatic', '')
+                    elif re.match(r'.*?succulent.*?', name, flags=re.IGNORECASE):
+                        category = "Succulent"
+                        name = name.replace('Succulent', '')
+                    else:
+                        category = "Other"
+
+                    name = name.replace('-', ' ').replace('_', ' ').replace('+', ' ')
+                    item["name"] = " ".join([i for i in name.split() if not i.isdigit()])
+                    item["mac"] = newName.replace("/mnt/jarvis", "/Volumes")
+                    item["category"] = category
+                    item["path"] = newName.replace("/mnt/jarvis/Library", "Y:").replace("/", "\\")
+
+        with open('/home/dyang/PWP-Lib-Search/public/plants.json', 'w') as publicJson:
+            json.dump(plantData, publicJson)
+        with open('/home/dyang/PWP-Lib-Search/build/plants.json', 'w') as buildJson:
+            json.dump(plantData, buildJson)
+        print("rename file success")
 
     event_handler.on_created = on_created
     event_handler.on_deleted = on_deleted
+    event_handler.on_moved = on_moved
 
     nWatch = PollingObserver(timeout=20)
     targetPath = str(path)
