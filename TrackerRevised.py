@@ -1,7 +1,7 @@
 import sys
 import time
 import logging
-from watchdog.observers import Observer
+from watchdog.observers.polling import PollingObserver
 from watchdog.events import PatternMatchingEventHandler
 import datetime, re, time, os
 from PIL import Image
@@ -149,7 +149,7 @@ if __name__ == "__main__":
     event_handler.on_created = on_created
     event_handler.on_deleted = on_deleted
 
-    nWatch = Observer()
+    nWatch = PollingObserver(timeout=20)
     targetPath = str(path)
     nWatch.schedule(event_handler, targetPath, recursive=False)
 
