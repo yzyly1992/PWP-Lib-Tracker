@@ -11,7 +11,7 @@ import json
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s - %(message)s',
-                        datefmt='%Y-%m-%d %H:%M:%S')
+                        datefmt='%Y-%m-%d %H:%M:%S', filename='tracker.log')
     path = "/mnt/jarvis/Library/PWP-LIBRARY/CUTOUTS/PLANTS/ALL PLANTS MASTER"
     event_handler = PatternMatchingEventHandler(patterns="*.png", ignore_patterns = "", ignore_directories=True, case_sensitive=False)
     publicPath = "/home/dyang/PWP-Lib-Search/build"
@@ -122,7 +122,7 @@ if __name__ == "__main__":
             json.dump(plantData, publicJson)
         with open('/home/dyang/PWP-Lib-Search/build/plants.json', 'w') as buildJson:
             json.dump(plantData, buildJson)
-        print("add file success")
+        logging.info("add file success: " + filePath)
 
                 
 
@@ -142,7 +142,7 @@ if __name__ == "__main__":
                         json.dump(plantData, publicJson)
                     with open('/home/dyang/PWP-Lib-Search/build/plants.json', 'w') as buildJson:
                         json.dump(plantData, buildJson)
-        print("delete file success")
+        logging.info("delete file success: " + filePath)
 
     def on_moved(event):
         oldName = event.src_path
@@ -187,7 +187,7 @@ if __name__ == "__main__":
             json.dump(plantData, publicJson)
         with open('/home/dyang/PWP-Lib-Search/build/plants.json', 'w') as buildJson:
             json.dump(plantData, buildJson)
-        print("rename file success")
+        logging.info("rename file success: " + newName)
 
     event_handler.on_created = on_created
     event_handler.on_deleted = on_deleted
