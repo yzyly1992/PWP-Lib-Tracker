@@ -193,7 +193,7 @@ if __name__ == "__main__":
     event_handler.on_deleted = on_deleted
     event_handler.on_moved = on_moved
 
-    nWatch = PollingObserver(timeout=20)
+    nWatch = PollingObserver(timeout=60)
     targetPath = str(path)
     nWatch.schedule(event_handler, targetPath, recursive=False)
 

@@ -1,0 +1,10 @@
+{
+  "apps" : [
+    {
+      "name"      : "tracker",
+      "interpreter": "python3",
+      "script": "/home/dyang/PWP-Lib-Tracker/TrackerRevised.py",
+      "cron": "0 0 12 * * *"
+    }
+  ]
+}
